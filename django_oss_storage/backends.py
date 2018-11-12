@@ -5,9 +5,9 @@ import six
 import shutil
 
 try:
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin, quote
 except ImportError:
-    from urlparse import urljoin
+    from urlparse import urljoin, quote
 
 from datetime import datetime
 from django.core.files import File
@@ -212,7 +212,8 @@ class OssStorage(Storage):
             return self.bucket.sign_url('GET', key, expires=self.expire_time)
 
         scheme, endpoint = self.end_point.split('//')
-        return urljoin(scheme + '//' + self.bucket_name + '.' + endpoint, key)
+        return urljoin(scheme + '//' + self.bucket_name + '.' + endpoint,
+                       quote(key))
 
     def delete(self, name):
         name = self._get_key_name(name)
